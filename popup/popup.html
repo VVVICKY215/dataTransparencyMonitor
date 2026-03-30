@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Transparency Monitor</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <span class="domain" id="current-domain">Loading...</span>
+      <span class="site-type" id="site-type"></span>
+    </header>
+    
+    <!-- Risk Card -->
+    <section class="risk-card">
+      <div class="risk-circle" id="risk-circle">
+        <span class="risk-score" id="risk-score">--</span>
+      </div>
+      <div class="risk-info">
+        <div class="risk-label" id="risk-label">Analyzing...</div>
+        <p class="risk-summary" id="risk-summary">Checking this website...</p>
+      </div>
+    </section>
+    
+    <!-- What We Found - 集成展开式 -->
+    <section class="findings-card">
+      <h2 class="card-title">What we found</h2>
+      
+      <!-- Device Identification -->
+      <div class="finding-item">
+        <div class="finding-header" data-target="detail-identity">
+          <span class="finding-icon">👤</span>
+          <span class="finding-label">
+            <span class="tooltip-wrap">Device Identification
+              <i class="tooltip-icon">i</i>
+              <span class="tooltip-box">Indicates whether the website tries to recognise your device using browser or system information.</span>
+            </span>
+          </span>
+          <span class="finding-value" id="value-identity">—</span>
+          <span class="finding-arrow">▼</span>
+        </div>
+        <div class="finding-detail" id="detail-identity">
+          <div class="fp-grid">
+            <span class="fp-item" id="fp-canvas">○ Canvas</span>
+            <span class="fp-item" id="fp-webgl">○ WebGL</span>
+            <span class="fp-item" id="fp-audio">○ Audio</span>
+            <span class="fp-item" id="fp-font">○ Font</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Data Sharing -->
+      <div class="finding-item">
+        <div class="finding-header" data-target="detail-sharing">
+          <span class="finding-icon">🔗</span>
+          <span class="finding-label">
+            <span class="tooltip-wrap">Data Sharing
+              <i class="tooltip-icon">i</i>
+              <span class="tooltip-box">Shows whether data from this page may be shared with third-party services.</span>
+            </span>
+          </span>
+          <span class="finding-value" id="value-sharing">—</span>
+          <span class="finding-arrow">▼</span>
+        </div>
+        <div class="finding-detail" id="detail-sharing">
+          <div class="detail-content">
+            <span class="detail-label">Cookie Syncing:</span>
+            <span class="detail-value" id="detail-cookie-sync">Not detected</span>
+          </div>
+          <div class="sync-domains" id="sync-domains"></div>
+        </div>
+      </div>
+      
+      <!-- Trackers -->
+      <div class="finding-item">
+        <div class="finding-header" data-target="detail-trackers">
+          <span class="finding-icon">👁️</span>
+          <span class="finding-label">
+            <span class="tooltip-wrap">Trackers
+              <i class="tooltip-icon">i</i>
+              <span class="tooltip-box">Trackers are technologies that collect information about how you interact with a website.</span>
+            </span>
+          </span>
+          <span class="finding-value" id="value-trackers">—</span>
+          <span class="finding-arrow">▼</span>
+        </div>
+        <div class="finding-detail" id="detail-trackers">
+          <ul class="tracker-list" id="tracker-list">
+            <li class="tracker-item">No trackers detected</li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- Hidden Tracking -->
+      <div class="finding-item">
+        <div class="finding-header" data-target="detail-hidden">
+          <span class="finding-icon">🎭</span>
+          <span class="finding-label">
+            <span class="tooltip-wrap">Hidden Tracking
+              <i class="tooltip-icon">i</i>
+              <span class="tooltip-box">Indicates tracking techniques that may operate without obvious signals to the user.</span>
+            </span>
+          </span>
+          <span class="finding-value" id="value-hidden">—</span>
+          <span class="finding-arrow">▼</span>
+        </div>
+        <div class="finding-detail" id="detail-hidden">
+          <div class="detail-content">
+            <span class="detail-label">CNAME Cloaking:</span>
+            <span class="detail-value" id="detail-cname">Not detected</span>
+          </div>
+          <div class="cname-domains" id="cname-domains"></div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Score Breakdown -->
+    <section class="collapsible">
+      <button class="collapsible-header" id="toggle-score">
+        <span>How is this score calculated?</span>
+        <span class="collapse-icon">▼</span>
+      </button>
+      <div class="collapsible-content" id="content-score">
+        <div class="score-breakdown">
+          <div class="breakdown-row">
+            <span class="breakdown-label">
+              <span class="tooltip-wrap">Tracking Power
+                <i class="tooltip-icon">i</i>
+                <span class="tooltip-box">Measures how capable the detected tracking technologies are at identifying or monitoring users across websites.</span>
+              </span>
+            </span>
+            <div class="breakdown-bar">
+              <div class="breakdown-fill" id="bar-capability"></div>
+            </div>
+            <span class="breakdown-value" id="val-capability">0/35</span>
+          </div>
+          <div class="breakdown-row">
+            <span class="breakdown-label">
+              <span class="tooltip-wrap">Site Sensitivity
+                <i class="tooltip-icon">i</i>
+                <span class="tooltip-box">Reflects whether the current site is likely to involve personal, financial, or private data.</span>
+              </span>
+            </span>
+            <div class="breakdown-bar">
+              <div class="breakdown-fill" id="bar-sensitivity"></div>
+            </div>
+            <span class="breakdown-value" id="val-sensitivity">0/25</span>
+          </div>
+          <div class="breakdown-row">
+            <span class="breakdown-label">
+              <span class="tooltip-wrap">Tracking Amount
+                <i class="tooltip-icon">i</i>
+                <span class="tooltip-box">The number of trackers detected on the page.</span>
+              </span>
+            </span>
+            <div class="breakdown-bar">
+              <div class="breakdown-fill" id="bar-frequency"></div>
+            </div>
+            <span class="breakdown-value" id="val-frequency">0/15</span>
+          </div>
+          <div class="breakdown-row">
+            <span class="breakdown-label">
+              <span class="tooltip-wrap">Tracker Types
+                <i class="tooltip-icon">i</i>
+                <span class="tooltip-box">The variety of tracking technologies detected on the page (analytics, advertising, or fingerprinting...).</span>
+              </span>
+            </span>
+            <div class="breakdown-bar">
+              <div class="breakdown-fill" id="bar-context"></div>
+            </div>
+            <span class="breakdown-value" id="val-context">0/25</span>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="footer">
+      <span>Data Transparency Monitor v1.0</span>
+    </footer>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>

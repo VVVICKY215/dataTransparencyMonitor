@@ -1,0 +1,548 @@
+/* ============================================
+   Data Transparency Monitor - Popup Styles
+   Design: Integrated Expandable Items
+   ============================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+  background: #f5f5f5;
+  width: 340px;
+  min-height: 400px;
+}
+
+.container {
+  padding: 16px;
+}
+
+/* ============================================
+   Header
+   ============================================ */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.domain {
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.site-type {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.site-type.critical { background: #ffebee; color: #c62828; }
+.site-type.high { background: #fff3e0; color: #e65100; }
+.site-type.medium { background: #fffde7; color: #f57f17; }
+.site-type.low { background: #e8f5e9; color: #2e7d32; }
+.site-type.minimal { background: #eceff1; color: #546e7a; }
+
+/* ============================================
+   Risk Card
+   ============================================ */
+
+.risk-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.risk-circle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.risk-circle.high { background: linear-gradient(135deg, #ef5350, #c62828); }
+.risk-circle.medium { background: linear-gradient(135deg, #ffa726, #f57c00); }
+.risk-circle.low { background: linear-gradient(135deg, #66bb6a, #388e3c); }
+
+.risk-score {
+  font-size: 22px;
+  font-weight: 700;
+  color: white;
+}
+
+.risk-info { flex: 1; }
+
+.risk-label {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+
+.risk-label.high { color: #c62828; }
+.risk-label.medium { color: #f57c00; }
+.risk-label.low { color: #388e3c; }
+
+.risk-summary {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.4;
+}
+
+/* ============================================
+   Findings Card - 集成展开式设计
+   ============================================ */
+
+.findings-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.card-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #888;
+  margin-bottom: 8px;
+}
+
+/* Finding Item */
+.finding-item {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.finding-item:last-child {
+  border-bottom: none;
+}
+
+/* Finding Header (可点击) */
+.finding-header {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  cursor: pointer;
+  transition: background 0.2s;
+  border-radius: 6px;
+  margin: 0 -8px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.finding-header:hover {
+  background: #f8f8f8;
+}
+
+.finding-icon {
+  font-size: 16px;
+  width: 24px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.finding-label {
+  flex: 1;
+  font-size: 13px;
+  color: #333;
+  margin-left: 8px;
+}
+
+.finding-value {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 12px;
+  margin-right: 8px;
+}
+
+.finding-value.positive { background: #ffebee; color: #c62828; }
+.finding-value.warning { background: #fff3e0; color: #e65100; }
+.finding-value.neutral { background: #fff8e1; color: #f57f17; }
+.finding-value.negative { background: #e8f5e9; color: #2e7d32; }
+.finding-value.none { background: #f5f5f5; color: #999; }
+
+.finding-arrow {
+  font-size: 10px;
+  color: #999;
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+
+.finding-item.open .finding-arrow {
+  transform: rotate(180deg);
+}
+
+/* Finding Detail (展开内容) */
+.finding-detail {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  background: #fafafa;
+  border-radius: 8px;
+  margin: 0 0 8px 0;
+}
+
+.finding-item.open .finding-detail {
+  max-height: 200px;
+  padding: 12px;
+  overflow: visible;
+}
+
+/* Fingerprinting Grid */
+.fp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.fp-item {
+  font-size: 12px;
+  color: #666;
+  padding: 4px 8px;
+  background: white;
+  border-radius: 4px;
+}
+
+.fp-item.detected {
+  color: #c62828;
+  font-weight: 500;
+  background: #ffebee;
+}
+
+/* Detail Content */
+.detail-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.detail-label {
+  font-size: 12px;
+  color: #666;
+}
+
+.detail-value {
+  font-size: 12px;
+  color: #666;
+}
+
+.detail-value.detected {
+  color: #c62828;
+  font-weight: 500;
+}
+
+/* Domain Lists */
+.sync-domains,
+.cname-domains {
+  font-size: 11px;
+  color: #888;
+  margin-top: 4px;
+}
+
+/* Tracker List */
+.tracker-list {
+  list-style: none;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.tracker-item {
+  font-size: 11px;
+  color: #666;
+  padding: 6px 8px;
+  background: white;
+  border-radius: 4px;
+  margin-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tracker-item:last-child {
+  margin-bottom: 0;
+}
+
+.tracker-domain {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tracker-badge {
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-weight: 500;
+  margin-left: 8px;
+  flex-shrink: 0;
+}
+
+.tracker-badge.ads { background: #ffebee; color: #c62828; }
+.tracker-badge.analytics { background: #f3e5f5; color: #7b1fa2; }
+.tracker-badge.social { background: #e3f2fd; color: #1565c0; }
+.tracker-badge.fp { background: #fff3e0; color: #e65100; }
+.tracker-badge.cname { background: #e0f2f1; color: #00695c; }
+
+/* ============================================
+   Collapsible Section (Score Breakdown)
+   ============================================ */
+
+.collapsible {
+  background: white;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+.collapsible-header {
+  width: 100%;
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: #555;
+  text-align: left;
+  transition: background 0.2s;
+}
+
+.collapsible-header:hover {
+  background: #fafafa;
+}
+
+.collapse-icon {
+  font-size: 10px;
+  color: #999;
+  transition: transform 0.3s ease;
+}
+
+.collapsible.open .collapse-icon {
+  transform: rotate(180deg);
+}
+
+.collapsible-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.collapsible.open .collapsible-content {
+  max-height: 300px;
+  overflow: visible;
+}
+
+/* Score Breakdown */
+.score-breakdown {
+  padding: 0 16px 16px;
+}
+
+.breakdown-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  gap: 10px;
+}
+
+.breakdown-row:last-child {
+  margin-bottom: 0;
+}
+
+.breakdown-label {
+  font-size: 11px;
+  color: #666;
+  width: 95px;
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+.breakdown-bar {
+  flex: 1;
+  height: 6px;
+  background: #eee;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.breakdown-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.breakdown-fill.high { background: linear-gradient(90deg, #ef5350, #c62828); }
+.breakdown-fill.medium { background: linear-gradient(90deg, #ffa726, #f57c00); }
+.breakdown-fill.low { background: linear-gradient(90deg, #66bb6a, #388e3c); }
+
+.breakdown-value {
+  font-size: 10px;
+  color: #888;
+  width: 35px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ============================================
+   Footer
+   ============================================ */
+
+.footer {
+  text-align: center;
+  padding-top: 4px;
+}
+
+.footer span {
+  font-size: 10px;
+  color: #bbb;
+}
+
+/* ============================================
+   Scrollbar
+   ============================================ */
+
+.tracker-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.tracker-list::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 2px;
+}
+
+.tracker-list::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 2px;
+}
+
+.tracker-list::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
+}
+
+/* ============================================
+   Tooltip
+   ============================================ */
+
+.tooltip-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tooltip-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #e8e8e8;
+  color: #999;
+  font-size: 9px;
+  font-weight: 700;
+  font-style: normal;
+  cursor: default;
+  flex-shrink: 0;
+  line-height: 1;
+  transition: background 0.2s, color 0.2s;
+}
+
+.tooltip-wrap:hover .tooltip-icon {
+  background: #bdbdbd;
+  color: #555;
+}
+
+.tooltip-box {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  background: #2a2a2a;
+  color: #f0f0f0;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.5;
+  padding: 8px 11px;
+  border-radius: 8px;
+  width: 210px;
+  z-index: 999;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.22);
+  pointer-events: none;
+  white-space: normal;
+}
+
+.tooltip-box::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 14px;
+  border: 5px solid transparent;
+  border-top-color: #2a2a2a;
+}
+
+.tooltip-wrap:hover .tooltip-box {
+  display: block;
+}
+
+/* Keep tooltip visible over other elements */
+.finding-header,
+.breakdown-row {
+  overflow: visible;
+}
+
+.findings-card,
+.collapsible {
+  overflow: visible;
+}
+
+/* Breakdown tooltips open to the RIGHT to avoid clipping */
+.breakdown-label .tooltip-box {
+  bottom: auto;
+  top: 50%;
+  left: calc(100% + 8px);
+  transform: translateY(-50%);
+  width: 190px;
+}
+
+.breakdown-label .tooltip-box::after {
+  top: 50%;
+  left: -10px;
+  transform: translateY(-50%);
+  border-top-color: transparent;
+  border-right-color: #2a2a2a;
+}
+
