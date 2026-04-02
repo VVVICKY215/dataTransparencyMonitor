@@ -1,6 +1,5 @@
 /* ============================================
    Data Transparency Monitor - Popup Styles
-   Design: Integrated Expandable Items
    ============================================ */
 
 * {
@@ -16,16 +15,16 @@ body {
   color: #333;
   background: #f5f5f5;
   width: 340px;
-  min-height: 400px;
+  min-height: 420px;
+}
+
+button {
+  font: inherit;
 }
 
 .container {
   padding: 16px;
 }
-
-/* ============================================
-   Header
-   ============================================ */
 
 .header {
   display: flex;
@@ -59,10 +58,6 @@ body {
 .site-type.low { background: #e8f5e9; color: #2e7d32; }
 .site-type.minimal { background: #eceff1; color: #546e7a; }
 
-/* ============================================
-   Risk Card
-   ============================================ */
-
 .risk-card {
   background: white;
   border-radius: 12px;
@@ -82,6 +77,7 @@ body {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  background: linear-gradient(135deg, #b0bec5, #78909c);
 }
 
 .risk-circle.high { background: linear-gradient(135deg, #ef5350, #c62828); }
@@ -94,29 +90,55 @@ body {
   color: white;
 }
 
-.risk-info { flex: 1; }
+.risk-info {
+  flex: 1;
+}
+
+.risk-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
 
 .risk-label {
   font-size: 13px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  margin-bottom: 2px;
 }
 
 .risk-label.high { color: #c62828; }
 .risk-label.medium { color: #f57c00; }
 .risk-label.low { color: #388e3c; }
 
+.evidence-badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #eceff1;
+  color: #546e7a;
+  white-space: nowrap;
+}
+
+.evidence-badge.high { background: #ffebee; color: #c62828; }
+.evidence-badge.medium { background: #fff3e0; color: #e65100; }
+.evidence-badge.low { background: #eceff1; color: #546e7a; }
+
 .risk-summary {
   font-size: 13px;
   color: #666;
   line-height: 1.4;
+  margin-bottom: 6px;
 }
 
-/* ============================================
-   Findings Card - 集成展开式设计
-   ============================================ */
+.risk-note {
+  font-size: 11px;
+  color: #8a8a8a;
+  line-height: 1.35;
+}
 
 .findings-card {
   background: white;
@@ -124,6 +146,7 @@ body {
   padding: 16px;
   margin-bottom: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  overflow: visible;
 }
 
 .card-title {
@@ -135,7 +158,6 @@ body {
   margin-bottom: 8px;
 }
 
-/* Finding Item */
 .finding-item {
   border-bottom: 1px solid #f0f0f0;
 }
@@ -144,17 +166,18 @@ body {
   border-bottom: none;
 }
 
-/* Finding Header (可点击) */
 .finding-header {
+  width: calc(100% + 16px);
+  margin: 0 -8px;
+  padding: 12px 8px;
   display: flex;
   align-items: center;
-  padding: 12px 0;
-  cursor: pointer;
-  transition: background 0.2s;
+  background: transparent;
+  border: none;
   border-radius: 6px;
-  margin: 0 -8px;
-  padding-left: 8px;
-  padding-right: 8px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.2s;
 }
 
 .finding-header:hover {
@@ -162,25 +185,33 @@ body {
 }
 
 .finding-icon {
-  font-size: 16px;
-  width: 24px;
-  text-align: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 700;
+  color: #455a64;
+  background: #eceff1;
 }
 
 .finding-label {
   flex: 1;
   font-size: 13px;
   color: #333;
-  margin-left: 8px;
+  margin-left: 10px;
 }
 
 .finding-value {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
-  padding: 3px 10px;
+  padding: 3px 9px;
   border-radius: 12px;
   margin-right: 8px;
+  white-space: nowrap;
 }
 
 .finding-value.positive { background: #ffebee; color: #c62828; }
@@ -189,18 +220,19 @@ body {
 .finding-value.negative { background: #e8f5e9; color: #2e7d32; }
 .finding-value.none { background: #f5f5f5; color: #999; }
 
-.finding-arrow {
-  font-size: 10px;
+.finding-arrow,
+.collapse-icon {
+  font-size: 12px;
   color: #999;
   transition: transform 0.3s ease;
   flex-shrink: 0;
 }
 
-.finding-item.open .finding-arrow {
-  transform: rotate(180deg);
+.finding-item.open .finding-arrow,
+.collapsible.open .collapse-icon {
+  transform: rotate(90deg);
 }
 
-/* Finding Detail (展开内容) */
 .finding-detail {
   max-height: 0;
   overflow: hidden;
@@ -211,12 +243,11 @@ body {
 }
 
 .finding-item.open .finding-detail {
-  max-height: 200px;
+  max-height: 240px;
   padding: 12px;
   overflow: visible;
 }
 
-/* Fingerprinting Grid */
 .fp-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -237,7 +268,6 @@ body {
   background: #ffebee;
 }
 
-/* Detail Content */
 .detail-content {
   display: flex;
   justify-content: space-between;
@@ -245,11 +275,11 @@ body {
   margin-bottom: 8px;
 }
 
-.detail-label {
-  font-size: 12px;
-  color: #666;
+.detail-content:last-child {
+  margin-bottom: 0;
 }
 
+.detail-label,
 .detail-value {
   font-size: 12px;
   color: #666;
@@ -260,15 +290,18 @@ body {
   font-weight: 500;
 }
 
-/* Domain Lists */
+.detail-value.warning {
+  color: #e65100;
+  font-weight: 500;
+}
+
 .sync-domains,
 .cname-domains {
   font-size: 11px;
   color: #888;
-  margin-top: 4px;
+  margin-top: 6px;
 }
 
-/* Tracker List */
 .tracker-list {
   list-style: none;
   max-height: 120px;
@@ -285,10 +318,6 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.tracker-item:last-child {
-  margin-bottom: 0;
 }
 
 .tracker-domain {
@@ -308,21 +337,17 @@ body {
 }
 
 .tracker-badge.ads { background: #ffebee; color: #c62828; }
-.tracker-badge.analytics { background: #f3e5f5; color: #7b1fa2; }
-.tracker-badge.social { background: #e3f2fd; color: #1565c0; }
+.tracker-badge.analytics { background: #e3f2fd; color: #1565c0; }
+.tracker-badge.social { background: #e8eaf6; color: #3949ab; }
 .tracker-badge.fp { background: #fff3e0; color: #e65100; }
 .tracker-badge.cname { background: #e0f2f1; color: #00695c; }
-
-/* ============================================
-   Collapsible Section (Score Breakdown)
-   ============================================ */
 
 .collapsible {
   background: white;
   border-radius: 12px;
   margin-bottom: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  overflow: hidden;
+  overflow: visible;
 }
 
 .collapsible-header {
@@ -338,21 +363,10 @@ body {
   font-weight: 500;
   color: #555;
   text-align: left;
-  transition: background 0.2s;
 }
 
 .collapsible-header:hover {
   background: #fafafa;
-}
-
-.collapse-icon {
-  font-size: 10px;
-  color: #999;
-  transition: transform 0.3s ease;
-}
-
-.collapsible.open .collapse-icon {
-  transform: rotate(180deg);
 }
 
 .collapsible-content {
@@ -362,11 +376,10 @@ body {
 }
 
 .collapsible.open .collapsible-content {
-  max-height: 300px;
+  max-height: 320px;
   overflow: visible;
 }
 
-/* Score Breakdown */
 .score-breakdown {
   padding: 0 16px 16px;
 }
@@ -376,10 +389,7 @@ body {
   align-items: center;
   margin-bottom: 10px;
   gap: 10px;
-}
-
-.breakdown-row:last-child {
-  margin-bottom: 0;
+  overflow: visible;
 }
 
 .breakdown-label {
@@ -387,7 +397,6 @@ body {
   color: #666;
   width: 95px;
   flex-shrink: 0;
-  overflow: visible;
 }
 
 .breakdown-bar {
@@ -416,10 +425,6 @@ body {
   flex-shrink: 0;
 }
 
-/* ============================================
-   Footer
-   ============================================ */
-
 .footer {
   text-align: center;
   padding-top: 4px;
@@ -429,32 +434,6 @@ body {
   font-size: 10px;
   color: #bbb;
 }
-
-/* ============================================
-   Scrollbar
-   ============================================ */
-
-.tracker-list::-webkit-scrollbar {
-  width: 4px;
-}
-
-.tracker-list::-webkit-scrollbar-track {
-  background: #f0f0f0;
-  border-radius: 2px;
-}
-
-.tracker-list::-webkit-scrollbar-thumb {
-  background: #ccc;
-  border-radius: 2px;
-}
-
-.tracker-list::-webkit-scrollbar-thumb:hover {
-  background: #aaa;
-}
-
-/* ============================================
-   Tooltip
-   ============================================ */
 
 .tooltip-wrap {
   position: relative;
@@ -477,8 +456,6 @@ body {
   font-style: normal;
   cursor: default;
   flex-shrink: 0;
-  line-height: 1;
-  transition: background 0.2s, color 0.2s;
 }
 
 .tooltip-wrap:hover .tooltip-icon {
@@ -518,18 +495,6 @@ body {
   display: block;
 }
 
-/* Keep tooltip visible over other elements */
-.finding-header,
-.breakdown-row {
-  overflow: visible;
-}
-
-.findings-card,
-.collapsible {
-  overflow: visible;
-}
-
-/* Breakdown tooltips open to the RIGHT to avoid clipping */
 .breakdown-label .tooltip-box {
   bottom: auto;
   top: 50%;
@@ -546,3 +511,16 @@ body {
   border-right-color: #2a2a2a;
 }
 
+.tracker-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.tracker-list::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 2px;
+}
+
+.tracker-list::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 2px;
+}
