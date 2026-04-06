@@ -18,12 +18,9 @@
         <span class="risk-score" id="risk-score">--</span>
       </div>
       <div class="risk-info">
-        <div class="risk-row">
-          <div class="risk-label" id="risk-label">Analyzing...</div>
-          <span class="evidence-badge" id="evidence-badge">Collecting evidence</span>
-        </div>
+        <div class="risk-label" id="risk-label">Analyzing...</div>
         <p class="risk-summary" id="risk-summary">Checking this website...</p>
-        <p class="risk-note" id="risk-note">This score is an estimate based on the signals we can observe on this page.</p>
+        <p class="risk-note" id="risk-note">This score is based on observed page activity.</p>
       </div>
     </section>
 
@@ -43,15 +40,31 @@
           <span class="finding-arrow">&gt;</span>
         </button>
         <div class="finding-detail" id="detail-identity">
-          <div class="detail-content">
-            <span class="detail-label">Evidence strength</span>
-            <span class="detail-value" id="detail-identity-status">Limited</span>
-          </div>
           <div class="fp-grid">
-            <span class="fp-item" id="fp-canvas">Canvas</span>
-            <span class="fp-item" id="fp-webgl">WebGL</span>
-            <span class="fp-item" id="fp-audio">Audio</span>
-            <span class="fp-item" id="fp-font">Font</span>
+            <span class="fp-item" id="fp-canvas">
+              <span class="tooltip-wrap">Canvas
+                <i class="tooltip-icon">i</i>
+                <span class="tooltip-box">Reads image-rendering output that can vary by device or browser.</span>
+              </span>
+            </span>
+            <span class="fp-item" id="fp-webgl">
+              <span class="tooltip-wrap">WebGL
+                <i class="tooltip-icon">i</i>
+                <span class="tooltip-box">Reads graphics hardware details that can help identify a device.</span>
+              </span>
+            </span>
+            <span class="fp-item" id="fp-audio">
+              <span class="tooltip-wrap">Audio
+                <i class="tooltip-icon">i</i>
+                <span class="tooltip-box">Uses audio processing patterns that may differ across devices.</span>
+              </span>
+            </span>
+            <span class="fp-item" id="fp-font">
+              <span class="tooltip-wrap">Font
+                <i class="tooltip-icon">i</i>
+                <span class="tooltip-box">Checks available fonts to help distinguish one device from another.</span>
+              </span>
+            </span>
           </div>
         </div>
       </div>
@@ -72,10 +85,6 @@
           <div class="detail-content">
             <span class="detail-label">Cookie syncing</span>
             <span class="detail-value" id="detail-cookie-sync">Not detected</span>
-          </div>
-          <div class="detail-content">
-            <span class="detail-label">Confidence</span>
-            <span class="detail-value" id="detail-cookie-confidence">Low</span>
           </div>
           <div class="sync-domains" id="sync-domains"></div>
         </div>

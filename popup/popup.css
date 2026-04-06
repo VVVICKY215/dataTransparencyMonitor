@@ -94,38 +94,17 @@ button {
   flex: 1;
 }
 
-.risk-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 4px;
-}
-
 .risk-label {
   font-size: 13px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  margin-bottom: 4px;
 }
 
 .risk-label.high { color: #c62828; }
 .risk-label.medium { color: #f57c00; }
 .risk-label.low { color: #388e3c; }
-
-.evidence-badge {
-  font-size: 10px;
-  font-weight: 600;
-  padding: 3px 8px;
-  border-radius: 999px;
-  background: #eceff1;
-  color: #546e7a;
-  white-space: nowrap;
-}
-
-.evidence-badge.high { background: #ffebee; color: #c62828; }
-.evidence-badge.medium { background: #fff3e0; color: #e65100; }
-.evidence-badge.low { background: #eceff1; color: #546e7a; }
 
 .risk-summary {
   font-size: 13px;
@@ -215,7 +194,6 @@ button {
 }
 
 .finding-value.positive { background: #ffebee; color: #c62828; }
-.finding-value.warning { background: #fff3e0; color: #e65100; }
 .finding-value.neutral { background: #fff8e1; color: #f57f17; }
 .finding-value.negative { background: #e8f5e9; color: #2e7d32; }
 .finding-value.none { background: #f5f5f5; color: #999; }
@@ -260,12 +238,29 @@ button {
   padding: 4px 8px;
   background: white;
   border-radius: 4px;
+  overflow: visible;
 }
 
 .fp-item.detected {
   color: #c62828;
   font-weight: 500;
   background: #ffebee;
+}
+
+.fp-item .tooltip-wrap {
+  width: 100%;
+  justify-content: space-between;
+}
+
+.fp-item .tooltip-box {
+  left: 50%;
+  transform: translateX(-50%);
+  width: 180px;
+}
+
+.fp-item .tooltip-box::after {
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .detail-content {
@@ -287,11 +282,6 @@ button {
 
 .detail-value.detected {
   color: #c62828;
-  font-weight: 500;
-}
-
-.detail-value.warning {
-  color: #e65100;
   font-weight: 500;
 }
 
