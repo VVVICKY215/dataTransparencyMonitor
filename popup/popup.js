@@ -216,36 +216,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function updateScoreBreakdown(data) {
-    const fp = data.fingerprinting || {};
-    const trackers = data.thirdPartyRequests || [];
-    const sensitivity = data.sensitivity?.score || 30;
-
-    let capabilityRaw = 0;
-    if (fp.canvas) capabilityRaw += 25;
-    if (fp.webgl) capabilityRaw += 25;
-    if (fp.audio) capabilityRaw += 20;
-    if (fp.font) capabilityRaw += 15;
-    if (data.cookieSync?.detected) capabilityRaw += 20;
-    if (data.cnameCloaking?.detected) capabilityRaw += 25;
-    capabilityRaw += Math.min(trackers.filter((tracker) => tracker.isKnownTracker).length * 5, 30);
-    capabilityRaw += Math.min(trackers.filter((tracker) => tracker.isHighRisk).length * 10, 20);
-    capabilityRaw = Math.min(capabilityRaw, 100);
-
-    const sensitivityWeighted = Math.round(sensitivity * 0.25);
-    const frequencyWeighted = Math.round(Math.min(trackers.length * 5, 100) * 0.15);
-
-    let contextRaw = Math.min(trackers.length * 3, 50);
-    const categories = new Set(trackers.filter((tracker) => tracker.trackerCategory).map((tracker) => tracker.trackerCategory));
-    if (categories.has('advertising')) contextRaw += 15;
-    if (categories.has('analytics')) contextRaw += 10;
-    if (categories.has('social')) contextRaw += 10;
-    if (categories.has('fingerprinting')) contextRaw += 20;
-    contextRaw = Math.min(contextRaw, 100);
-
-    updateBar('capability', Math.round(capabilityRaw * 0.35), 35);
-    updateBar('sensitivity', sensitivityWeighted, 25);
-    updateBar('frequency', frequencyWeighted, 15);
-    updateBar('context', Math.round(contextRaw * 0.25), 25);
+    const c = data.scoreComponents || { capability: 0, sensitivity: 0, frequency: 0, context: 0 };
+    updateBar('capability', c.capability, 35);
+    updateBar('sensitivity', c.sensitivity, 25);
+    updateBar('frequency', c.frequency, 15);
+    updateBar('context', c.context, 25);
   }
 
   function updateBar(name, value, max) {

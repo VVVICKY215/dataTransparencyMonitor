@@ -1,3 +1,5 @@
+// Background worker for request tracking and page risk state.
+
 import { checkTracker, isCnameCloaking } from '../data/trackers.js';
 import { calculateSensitivity } from '../data/sensitivity.js';
 import {
@@ -8,6 +10,27 @@ import {
 
 const STORAGE_KEY = 'dtmTabData';
 const tabData = {};
+const pendingInits = {};
+
+// Common two-part TLDs need three labels for the base domain.
+const MULTI_PART_TLDS = new Set([
+  'co.uk', 'org.uk', 'me.uk', 'net.uk', 'ltd.uk', 'plc.uk', 'gov.uk', 'ac.uk', 'sch.uk',
+  'co.jp', 'ne.jp', 'or.jp', 'ac.jp', 'go.jp',
+  'com.au', 'net.au', 'org.au', 'edu.au', 'gov.au', 'asn.au', 'id.au',
+  'co.nz', 'net.nz', 'org.nz', 'govt.nz', 'ac.nz',
+  'co.in', 'net.in', 'org.in', 'gov.in', 'ac.in',
+  'com.br', 'net.br', 'org.br', 'gov.br', 'edu.br',
+  'com.cn', 'net.cn', 'org.cn', 'gov.cn', 'edu.cn',
+  'com.mx', 'net.mx', 'org.mx', 'gob.mx',
+  'co.za', 'org.za', 'net.za', 'gov.za', 'ac.za',
+  'co.kr', 'or.kr', 'go.kr', 'ac.kr', 're.kr',
+  'com.sg', 'net.sg', 'org.sg', 'gov.sg', 'edu.sg',
+  'com.hk', 'net.hk', 'org.hk', 'gov.hk', 'edu.hk',
+  'co.il', 'org.il', 'net.il', 'gov.il', 'ac.il',
+  'com.ar', 'net.ar', 'org.ar', 'gov.ar',
+  'com.tr', 'net.tr', 'org.tr', 'gov.tr', 'edu.tr',
+  'com.tw', 'net.tw', 'org.tw', 'gov.tw', 'edu.tw'
+]);
 
 function extractDomain(url) {
   try {
@@ -17,15 +40,20 @@ function extractDomain(url) {
   }
 }
 
+function getBaseDomain(domain) {
+  const parts = domain.toLowerCase().split('.');
+  if (parts.length <= 2) return domain.toLowerCase();
+
+  // Treat entries like co.uk as the public suffix.
+  const potentialTLD = parts.slice(-2).join('.');
+  if (MULTI_PART_TLDS.has(potentialTLD) && parts.length > 2) {
+    return parts.slice(-3).join('.');
+  }
+  return parts.slice(-2).join('.');
+}
+
 function isThirdParty(requestDomain, pageDomain) {
   if (!requestDomain || !pageDomain) return false;
-
-  const getBaseDomain = (domain) => {
-    const parts = domain.toLowerCase().split('.');
-    if (parts.length <= 2) return domain.toLowerCase();
-    return parts.slice(-2).join('.');
-  };
-
   return getBaseDomain(requestDomain) !== getBaseDomain(pageDomain);
 }
 
@@ -62,6 +90,7 @@ function createEmptyTabState(url) {
     },
     riskScore: 0,
     riskLevel: 'low',
+    scoreComponents: { capability: 0, sensitivity: 0, frequency: 0, context: 0 },
     timestamp: Date.now()
   };
 }
@@ -150,6 +179,12 @@ function updateRiskScore(tabId) {
   );
 
   data.riskScore = Math.round(score);
+  data.scoreComponents = {
+    capability: Math.round(capabilityScore * 0.35),
+    sensitivity: Math.round(sensitivityScore * 0.25),
+    frequency: Math.round(frequencyScore * 0.15),
+    context: Math.round(contextScore * 0.25)
+  };
   if (score < 33) {
     data.riskLevel = 'low';
   } else if (score < 66) {
@@ -276,6 +311,7 @@ function buildResponseData(data) {
     note: 'This score is based on observed page activity.',
     riskScore: data.riskScore,
     riskLevel: data.riskLevel,
+    scoreComponents: data.scoreComponents || { capability: 0, sensitivity: 0, frequency: 0, context: 0 },
     timestamp: data.timestamp
   };
 }
@@ -360,13 +396,21 @@ async function handleFingerprintDetection(tabId, detection) {
 chrome.webRequest.onBeforeRequest.addListener(
   (details) => {
     const { tabId, url, type } = details;
-    if (tabId < 0) return;
+  if (tabId < 0) return;
 
     if (!tabData[tabId]) {
-      chrome.tabs.get(tabId, async (tab) => {
-        if (chrome.runtime.lastError || !tab?.url) return;
-        await initTabData(tabId, tab.url);
-        await processRequest(tabId, url, type);
+      // Start one tab init, then let waiting requests reuse it.
+      if (!pendingInits[tabId]) {
+        pendingInits[tabId] = chrome.tabs.get(tabId).then(async (tab) => {
+          if (tab?.url) await initTabData(tabId, tab.url);
+        }).catch(() => {}).finally(() => {
+          delete pendingInits[tabId];
+        });
+      }
+
+      // Keep the first request instead of dropping it during tab init.
+      pendingInits[tabId].then(() => {
+        if (tabData[tabId]) processRequest(tabId, url, type);
       });
       return;
     }

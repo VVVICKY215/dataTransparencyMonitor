@@ -1,9 +1,12 @@
+// Page-context hooks for lightweight fingerprinting detection.
+
 (function() {
   'use strict';
 
   if (window.__DTM_DETECTOR_ACTIVE__) return;
   window.__DTM_DETECTOR_ACTIVE__ = true;
 
+  // Runs in the page context so API hooks can see page scripts.
   const CONFIG = {
     CANVAS_DATA_ACCESS_THRESHOLD: 2,
     WEBGL_PARAMETER_ACCESS_THRESHOLD: 8,
@@ -19,6 +22,7 @@
     fontMeasure: 0
   };
 
+  // Report each signal once per page.
   const reported = {
     canvas: false,
     webgl: false,
@@ -32,6 +36,7 @@
     }
   }
 
+  // Send detections back to the content script.
   function reportDetection(type, details) {
     if (reported[type]) return;
     reported[type] = true;
@@ -49,6 +54,7 @@
     log(`Reported ${type} fingerprinting`, details);
   }
 
+  // Canvas readback is often used as a fingerprinting signal.
   function hookCanvasAPI() {
     const originalToDataURL = HTMLCanvasElement.prototype.toDataURL;
     HTMLCanvasElement.prototype.toDataURL = function(...args) {
@@ -103,6 +109,7 @@
     };
   }
 
+  // WebGL parameters can expose GPU and driver details.
   function hookWebGLAPI() {
     const fingerprintParams = [
       'VENDOR',
@@ -169,6 +176,7 @@
     }
   }
 
+  // Some audio graph patterns can act as device fingerprints.
   function hookAudioAPI() {
     const audioContextUsage = {
       oscillatorCreated: false,
@@ -230,6 +238,7 @@
     }
   }
 
+  // Repeated font measurement can suggest font probing.
   function hookFontAPI() {
     const originalMeasureText = CanvasRenderingContext2D.prototype.measureText;
     const measuredFonts = new Set();
@@ -255,6 +264,7 @@
     };
   }
 
+  // Install hooks from the injected page script.
   function init() {
     try {
       hookCanvasAPI();

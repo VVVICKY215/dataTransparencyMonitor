@@ -1,21 +1,6 @@
-/**
- * Data Transparency Monitor - Website Sensitivity Classification
- * 
- * 基于 Contextual Integrity 理论 (Nissenbaum, 2004)
- * 不同类型网站的数据敏感度不同，相同追踪技术造成的隐私风险也不同
- * 
- * 敏感度等级:
- * - CRITICAL (90-100): 健康、医疗、心理健康
- * - HIGH (70-89): 金融、政府、法律、成人、约会
- * - MEDIUM (40-69): 购物、社交、求职、教育
- * - LOW (20-39): 新闻、娱乐、体育、旅游
- * - MINIMAL (10-19): 工具、参考、搜索引擎
- */
+// Website sensitivity scoring based on broad content categories.
 
-// ============================================
-// 敏感度等级定义
-// ============================================
-
+// Score ranges used by the popup and reporting views.
 const SENSITIVITY_LEVELS = {
   CRITICAL: { min: 90, max: 100, label: 'Critical', description: 'Highly sensitive personal data' },
   HIGH: { min: 70, max: 89, label: 'High', description: 'Sensitive personal/financial data' },
@@ -25,17 +10,13 @@ const SENSITIVITY_LEVELS = {
   DEFAULT: { min: 30, max: 30, label: 'Unknown', description: 'Unclassified website' }
 };
 
-// ============================================
-// Layer 1: 已知域名精确匹配
-// 最高优先级，精确匹配域名
-// ============================================
-
+// Exact domain matches. These take priority over keyword checks.
 const KNOWN_DOMAINS = {
-  // ========== CRITICAL (90-100): 健康、医疗 ==========
+  // Critical sensitivity: health and medical.
   critical: {
     score: 95,
     domains: [
-      // 健康信息网站
+      // Health information sites.
       'webmd.com',
       'mayoclinic.org',
       'healthline.com',
@@ -46,14 +27,14 @@ const KNOWN_DOMAINS = {
       'health.com',
       'verywellhealth.com',
       'patient.info',
-      
-      // 国家健康服务
+
+      // Public health services.
       'nhs.uk',
       'nih.gov',
       'cdc.gov',
       'who.int',
-      
-      // 心理健康
+
+      // Mental health.
       'psychologytoday.com',
       'betterhelp.com',
       'talkspace.com',
@@ -61,34 +42,34 @@ const KNOWN_DOMAINS = {
       'headspace.com',
       '7cups.com',
       'mentalhealth.gov',
-      
-      // 医院和诊所
+
+      // Hospitals and clinics.
       'zocdoc.com',
       'healthgrades.com',
       'vitals.com',
-      
-      // 药房
+
+      // Pharmacies.
       'cvs.com',
       'walgreens.com',
       'riteaid.com',
       'pharmacy.amazon.com',
-      
-      // 医疗保险
+
+      // Health insurance.
       'healthcare.gov',
       'medicare.gov',
-      
-      // 健身追踪 (涉及健康数据)
+
+      // Fitness tracking.
       'myfitnesspal.com',
       'fitbit.com',
       'strava.com'
     ]
   },
-  
-  // ========== HIGH (70-89): 金融、政府、法律、成人 ==========
+
+  // High sensitivity: finance, government, legal, and adult content.
   high: {
     score: 80,
     domains: [
-      // 银行
+      // Banking.
       'chase.com',
       'bankofamerica.com',
       'wellsfargo.com',
@@ -103,8 +84,8 @@ const KNOWN_DOMAINS = {
       'lloydsbank.com',
       'natwest.com',
       'santander.co.uk',
-      
-      // 投资和交易
+
+      // Investing and trading.
       'fidelity.com',
       'schwab.com',
       'vanguard.com',
@@ -114,14 +95,14 @@ const KNOWN_DOMAINS = {
       'coinbase.com',
       'binance.com',
       'kraken.com',
-      
-      // 支付服务
+
+      // Payment services.
       'paypal.com',
       'venmo.com',
       'squareup.com',
       'stripe.com',
-      
-      // 信用和贷款
+
+      // Credit and lending.
       'creditkarma.com',
       'experian.com',
       'equifax.com',
@@ -130,26 +111,26 @@ const KNOWN_DOMAINS = {
       'lendingtree.com',
       'sofi.com',
       'lendingclub.com',
-      
-      // 税务
+
+      // Tax.
       'irs.gov',
       'turbotax.com',
       'hrblock.com',
       'taxact.com',
-      
-      // 政府服务
+
+      // Government services.
       'gov.uk',
       'usa.gov',
       'ssa.gov',
       'dmv.org',
-      
-      // 法律服务
+
+      // Legal services.
       'legalzoom.com',
       'rocketlawyer.com',
       'avvo.com',
       'findlaw.com',
-      
-      // 约会应用
+
+      // Dating apps.
       'tinder.com',
       'bumble.com',
       'hinge.co',
@@ -158,8 +139,8 @@ const KNOWN_DOMAINS = {
       'pof.com',
       'eharmony.com',
       'grindr.com',
-      
-      // 保险
+
+      // Insurance.
       'geico.com',
       'progressive.com',
       'statefarm.com',
@@ -167,12 +148,12 @@ const KNOWN_DOMAINS = {
       'libertymutual.com'
     ]
   },
-  
-  // ========== MEDIUM (40-69): 购物、社交、求职、教育 ==========
+
+  // Medium sensitivity: shopping, social, work, and education.
   medium: {
     score: 55,
     domains: [
-      // 电商
+      // Ecommerce.
       'amazon.com',
       'amazon.co.uk',
       'ebay.com',
@@ -193,8 +174,8 @@ const KNOWN_DOMAINS = {
       'uniqlo.com',
       'nike.com',
       'adidas.com',
-      
-      // 社交媒体
+
+      // Social media.
       'facebook.com',
       'instagram.com',
       'twitter.com',
@@ -207,8 +188,8 @@ const KNOWN_DOMAINS = {
       'tumblr.com',
       'discord.com',
       'twitch.tv',
-      
-      // 求职
+
+      // Job search.
       'indeed.com',
       'glassdoor.com',
       'monster.com',
@@ -216,8 +197,8 @@ const KNOWN_DOMAINS = {
       'careerbuilder.com',
       'dice.com',
       'hired.com',
-      
-      // 教育
+
+      // Education.
       'coursera.org',
       'udemy.com',
       'edx.org',
@@ -227,16 +208,16 @@ const KNOWN_DOMAINS = {
       'pluralsight.com',
       'lynda.com',
       'duolingo.com',
-      
-      // 房产
+
+      // Real estate.
       'zillow.com',
       'realtor.com',
       'redfin.com',
       'trulia.com',
       'rightmove.co.uk',
       'zoopla.co.uk',
-      
-      // 外卖和食品
+
+      // Delivery and groceries.
       'doordash.com',
       'ubereats.com',
       'grubhub.com',
@@ -246,12 +227,12 @@ const KNOWN_DOMAINS = {
       'justeat.co.uk'
     ]
   },
-  
-  // ========== LOW (20-39): 新闻、娱乐、体育 ==========
+
+  // Low sensitivity: news, entertainment, sports, and travel.
   low: {
     score: 30,
     domains: [
-      // 新闻
+      // News.
       'bbc.com',
       'bbc.co.uk',
       'cnn.com',
@@ -271,8 +252,8 @@ const KNOWN_DOMAINS = {
       'vice.com',
       'vox.com',
       'politico.com',
-      
-      // 娱乐
+
+      // Entertainment.
       'netflix.com',
       'hulu.com',
       'disneyplus.com',
@@ -287,8 +268,8 @@ const KNOWN_DOMAINS = {
       'pandora.com',
       'imdb.com',
       'rottentomatoes.com',
-      
-      // 体育
+
+      // Sports.
       'espn.com',
       'sports.yahoo.com',
       'bleacherreport.com',
@@ -299,8 +280,8 @@ const KNOWN_DOMAINS = {
       'nhl.com',
       'fifa.com',
       'skysports.com',
-      
-      // 旅游
+
+      // Travel.
       'booking.com',
       'expedia.com',
       'tripadvisor.com',
@@ -310,8 +291,8 @@ const KNOWN_DOMAINS = {
       'skyscanner.com',
       'trip.com',
       'agoda.com',
-      
-      // 游戏
+
+      // Games.
       'steampowered.com',
       'epicgames.com',
       'ea.com',
@@ -324,43 +305,43 @@ const KNOWN_DOMAINS = {
       'kotaku.com'
     ]
   },
-  
-  // ========== MINIMAL (10-19): 工具、参考 ==========
+
+  // Minimal sensitivity: tools and reference sites.
   minimal: {
     score: 15,
     domains: [
-      // 搜索引擎
+      // Search engines.
       'google.com',
       'bing.com',
       'duckduckgo.com',
       'yahoo.com',
       'baidu.com',
-      
-      // 工具
+
+      // Utilities.
       'translate.google.com',
       'wolframalpha.com',
       'calculator.net',
       'timeanddate.com',
       'speedtest.net',
-      
-      // 参考
+
+      // Reference.
       'wikipedia.org',
       'wikihow.com',
       'britannica.com',
       'dictionary.com',
       'thesaurus.com',
       'merriam-webster.com',
-      
-      // 天气
+
+      // Weather.
       'weather.com',
       'accuweather.com',
       'wunderground.com',
-      
-      // 地图
+
+      // Maps.
       'maps.google.com',
       'waze.com',
-      
-      // 开发者工具
+
+      // Developer tools.
       'github.com',
       'gitlab.com',
       'stackoverflow.com',
@@ -370,11 +351,7 @@ const KNOWN_DOMAINS = {
   }
 };
 
-// ============================================
-// Layer 2: URL 路径关键词
-// 中等优先级，匹配 URL 中的路径
-// ============================================
-
+// URL path keywords. Checked after exact domain matches.
 const URL_PATH_KEYWORDS = {
   critical: {
     score: 90,
@@ -399,7 +376,7 @@ const URL_PATH_KEYWORDS = {
       '/fertility'
     ]
   },
-  
+
   high: {
     score: 75,
     keywords: [
@@ -424,7 +401,7 @@ const URL_PATH_KEYWORDS = {
       '/nsfw'
     ]
   },
-  
+
   medium: {
     score: 50,
     keywords: [
@@ -447,7 +424,7 @@ const URL_PATH_KEYWORDS = {
       '/class'
     ]
   },
-  
+
   low: {
     score: 25,
     keywords: [
@@ -468,11 +445,7 @@ const URL_PATH_KEYWORDS = {
   }
 };
 
-// ============================================
-// Layer 3: 域名关键词
-// 最低优先级，匹配域名中的关键词
-// ============================================
-
+// Domain keywords. Used only when no stronger rule matches.
 const DOMAIN_KEYWORDS = {
   critical: {
     score: 85,
@@ -494,7 +467,7 @@ const DOMAIN_KEYWORDS = {
       'wellness'
     ]
   },
-  
+
   high: {
     score: 70,
     keywords: [
@@ -518,7 +491,7 @@ const DOMAIN_KEYWORDS = {
       'sex'
     ]
   },
-  
+
   medium: {
     score: 45,
     keywords: [
@@ -544,7 +517,7 @@ const DOMAIN_KEYWORDS = {
       'course'
     ]
   },
-  
+
   low: {
     score: 25,
     keywords: [
@@ -569,15 +542,11 @@ const DOMAIN_KEYWORDS = {
   }
 };
 
-// ============================================
-// 核心检测函数
-// ============================================
-
 /**
- * 计算网站的数据敏感度分数
- * @param {string} url - 完整的URL
- * @param {string} domain - 域名
- * @returns {object} - { score, level, reason, category }
+ * Calculates a sensitivity score for a URL and domain.
+ * @param {string} url
+ * @param {string} domain
+ * @returns {object}
  */
 function calculateSensitivity(url, domain) {
   if (!url || !domain) {
@@ -588,29 +557,25 @@ function calculateSensitivity(url, domain) {
       category: 'unknown'
     };
   }
-  
+
   const normalizedDomain = domain.toLowerCase().trim();
   const normalizedUrl = url.toLowerCase();
-  
-  // Layer 1: 精确域名匹配
+
   const domainMatch = checkKnownDomains(normalizedDomain);
   if (domainMatch) {
     return domainMatch;
   }
-  
-  // Layer 2: URL路径关键词匹配
+
   const pathMatch = checkUrlPathKeywords(normalizedUrl);
   if (pathMatch) {
     return pathMatch;
   }
-  
-  // Layer 3: 域名关键词匹配
+
   const keywordMatch = checkDomainKeywords(normalizedDomain);
   if (keywordMatch) {
     return keywordMatch;
   }
-  
-  // 默认值
+
   return {
     score: SENSITIVITY_LEVELS.DEFAULT.min,
     level: 'DEFAULT',
@@ -619,13 +584,10 @@ function calculateSensitivity(url, domain) {
   };
 }
 
-/**
- * Layer 1: 检查已知域名
- */
+// Exact domain and subdomain matches.
 function checkKnownDomains(domain) {
   for (const [level, data] of Object.entries(KNOWN_DOMAINS)) {
     for (const knownDomain of data.domains) {
-      // 精确匹配或子域名匹配
       if (domain === knownDomain || domain.endsWith('.' + knownDomain)) {
         return {
           score: data.score,
@@ -639,14 +601,12 @@ function checkKnownDomains(domain) {
   return null;
 }
 
-/**
- * Layer 2: 检查URL路径关键词
- */
+// URL path keyword matches.
 function checkUrlPathKeywords(url) {
   try {
     const urlObj = new URL(url);
     const path = urlObj.pathname.toLowerCase();
-    
+
     for (const [level, data] of Object.entries(URL_PATH_KEYWORDS)) {
       for (const keyword of data.keywords) {
         if (path.includes(keyword)) {
@@ -660,18 +620,15 @@ function checkUrlPathKeywords(url) {
       }
     }
   } catch (e) {
-    // Invalid URL, skip path check
+    // Invalid URL, skip path check.
   }
   return null;
 }
 
-/**
- * Layer 3: 检查域名关键词
- */
+// Domain keyword matches, with common suffixes removed first.
 function checkDomainKeywords(domain) {
-  // 移除常见后缀以便更好匹配
   const domainWithoutTLD = domain.replace(/\.(com|org|net|co\.uk|io|gov|edu)$/i, '');
-  
+
   for (const [level, data] of Object.entries(DOMAIN_KEYWORDS)) {
     for (const keyword of data.keywords) {
       if (domainWithoutTLD.includes(keyword)) {
@@ -687,9 +644,7 @@ function checkDomainKeywords(domain) {
   return null;
 }
 
-/**
- * 从敏感度等级获取分类名称
- */
+// Map scoring levels to broader display categories.
 function getCategoryFromLevel(level) {
   const categories = {
     critical: 'health/medical',
@@ -701,9 +656,7 @@ function getCategoryFromLevel(level) {
   return categories[level] || 'general';
 }
 
-/**
- * 获取敏感度等级信息
- */
+// Resolve a score to its configured sensitivity level.
 function getSensitivityLevel(score) {
   if (score >= 90) return SENSITIVITY_LEVELS.CRITICAL;
   if (score >= 70) return SENSITIVITY_LEVELS.HIGH;
@@ -713,18 +666,16 @@ function getSensitivityLevel(score) {
   return SENSITIVITY_LEVELS.DEFAULT;
 }
 
-/**
- * 获取敏感度统计信息
- */
+// Counts exposed for diagnostics.
 function getSensitivityStats() {
   let totalDomains = 0;
   const byLevel = {};
-  
+
   for (const [level, data] of Object.entries(KNOWN_DOMAINS)) {
     byLevel[level] = data.domains.length;
     totalDomains += data.domains.length;
   }
-  
+
   return {
     totalKnownDomains: totalDomains,
     byLevel: byLevel,
@@ -732,10 +683,6 @@ function getSensitivityStats() {
     domainKeywordCategories: Object.keys(DOMAIN_KEYWORDS).length
   };
 }
-
-// ============================================
-// 导出
-// ============================================
 
 export {
   SENSITIVITY_LEVELS,

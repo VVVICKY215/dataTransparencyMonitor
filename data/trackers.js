@@ -1,24 +1,8 @@
-/**
- * Data Transparency Monitor - Known Tracker List
- * 
- * 数据来源:
- * - EasyPrivacy (https://easylist.to/)
- * - Disconnect (https://disconnect.me/trackerprotection)
- * - 学术研究论文中的常见tracker
- * 
- * 分类:
- * - advertising: 广告追踪
- * - analytics: 数据分析
- * - social: 社交媒体追踪
- * - fingerprinting: 已知使用fingerprinting的域名
- * - cname: 已知的CNAME cloaking域名
- */
+// Known tracker domains used by the monitor.
 
 const TRACKER_DATABASE = {
-  
-  // ============================================
-  // 广告追踪 (Advertising)
-  // ============================================
+
+  // Advertising trackers.
   advertising: [
     // Google Ads
     'doubleclick.net',
@@ -27,26 +11,26 @@ const TRACKER_DATABASE = {
     'googleads.g.doubleclick.net',
     'pagead2.googlesyndication.com',
     'adservice.google.com',
-    
+
     // Facebook/Meta
     'facebook.net',
     'facebook.com',
     'fbcdn.net',
     'connect.facebook.net',
-    
+
     // Amazon
     'amazon-adsystem.com',
     'aax.amazon-adsystem.com',
-    
+
     // Microsoft/Bing
     'bat.bing.com',
     'ads.microsoft.com',
-    
+
     // Twitter/X
     'ads-twitter.com',
     'ads-api.twitter.com',
-    
-    // 其他主要广告网络
+
+    // Other major ad networks.
     'criteo.com',
     'criteo.net',
     'outbrain.com',
@@ -79,24 +63,22 @@ const TRACKER_DATABASE = {
     'rhythmone.com',
     'undertone.com'
   ],
-  
-  // ============================================
-  // 数据分析 (Analytics)
-  // ============================================
+
+  // Analytics services.
   analytics: [
     // Google Analytics
     'google-analytics.com',
     'googletagmanager.com',
     'googletagservices.com',
     'analytics.google.com',
-    
+
     // Adobe Analytics
     'omtrdc.net',
     'demdex.net',
     '2o7.net',
     'everesttech.net',
-    
-    // 其他分析服务
+
+    // Other analytics services.
     'hotjar.com',
     'hotjar.io',
     'mixpanel.com',
@@ -131,10 +113,8 @@ const TRACKER_DATABASE = {
     'zendesk.com',
     'freshworks.com'
   ],
-  
-  // ============================================
-  // 社交媒体追踪 (Social)
-  // ============================================
+
+  // Social trackers.
   social: [
     // Facebook/Meta
     'facebook.com',
@@ -142,7 +122,7 @@ const TRACKER_DATABASE = {
     'fbcdn.net',
     'instagram.com',
     'whatsapp.com',
-    
+
     // Twitter/X
     'twitter.com',
     'twimg.com',
@@ -150,43 +130,41 @@ const TRACKER_DATABASE = {
     't.co',
     'syndication.twitter.com',
     'platform.twitter.com',
-    
+
     // LinkedIn
     'linkedin.com',
     'licdn.com',
     'ads.linkedin.com',
-    
+
     // Pinterest
     'pinterest.com',
     'pinimg.com',
     'ads.pinterest.com',
-    
+
     // TikTok
     'tiktok.com',
     'tiktokcdn.com',
     'byteoversea.com',
-    
+
     // Reddit
     'reddit.com',
     'redditstatic.com',
     'redditmedia.com',
-    
+
     // Snapchat
     'snapchat.com',
     'snap.com',
     'sc-static.net',
-    
-    // 其他
+
+    // Other sharing widgets.
     'addthis.com',
     'addtoany.com',
     'sharethis.com'
   ],
-  
-  // ============================================
-  // 已知使用 Fingerprinting 的域名
-  // ============================================
+
+  // Domains associated with fingerprinting.
   fingerprinting: [
-    // 设备识别服务
+    // Device identification services.
     'iovation.com',
     'threatmetrix.com',
     'fingerprintjs.com',
@@ -200,12 +178,12 @@ const TRACKER_DATABASE = {
     'socure.com',
     'ekata.com',
     'emailage.com',
-    
-    // CDN 提供的追踪服务（常用于fingerprinting）
-    'cloudflare.com',  // Cloudflare Insights (有争议，但包含追踪)
+
+    // CDN-provided services that may include tracking.
+    'cloudflare.com',  // Cloudflare Insights
     'akamaihd.net',
-    
-    // 学术研究中发现的fingerprinting域名
+
+    // Fingerprinting domains reported in research.
     'bluecava.com',
     'maxmind.com',
     'id5-sync.com',
@@ -215,34 +193,29 @@ const TRACKER_DATABASE = {
     'drawbridge.com',
     'crosswise.com'
   ],
-  
-  // ============================================
-  // CNAME Cloaking 域名
-  // 这些是已知使用CNAME cloaking技术的第一方伪装域名
-  // 来源: 学术论文 "Measuring the Prevalence of CNAME Cloaking-based Tracking"
-  // ============================================
+
+  // Known CNAME cloaking targets.
   cnameCloaking: [
-    // Adobe Experience Cloud (常见CNAME目标)
+    // Adobe Experience Cloud
     'data.adobedc.net',
     'dpm.demdex.net',
-    
+
     // Eulerian
     'eulerian.net',
-    
+
     // Criteo
     'dnsdelegation.io',
-    
+
     // AT Internet
     'xiti.com',
-    
+
     // Commanders Act
     'tagcommander.com',
-    
+
     // Piano/AT Internet
     'at-o.net',
-    
-    // 常见的CNAME伪装模式 (子域名)
-    // 这些是tracker经常CNAME到的目标
+
+    // Common CNAME destinations.
     'omtrdc.net',
     'sc.omtrdc.net',
     '2o7.net',
@@ -253,62 +226,52 @@ const TRACKER_DATABASE = {
     'k.keyade.com',
     'affex.org',
     'intentmedia.net',
-    'a]ffiliation.com',
+    'affiliation.com',
     'weborama.fr',
     'mediarithmics.com'
   ]
 };
 
-// ============================================
-// 高风险 Tracker 列表
-// 这些tracker有更激进的追踪行为
-// ============================================
+// Trackers treated as higher risk by the UI.
 const HIGH_RISK_TRACKERS = new Set([
-  // Fingerprinting 专家
+  // Fingerprinting specialists.
   'fingerprintjs.com',
   'fpjs.io',
   'iovation.com',
   'threatmetrix.com',
-  
-  // 跨设备追踪
+
+  // Cross-device tracking.
   'tapad.com',
   'drawbridge.com',
   'liveramp.com',
   'crosswise.com',
-  
-  // 数据经纪商
+
+  // Data brokers.
   'bluekai.com',
   'exelator.com',
   'eyeota.net',
   'krxd.net',
   'demdex.net',
-  
-  // CNAME cloaking
+
+  // CNAME cloaking.
   'eulerian.net',
   'dnsdelegation.io',
   'omtrdc.net'
 ]);
 
-// ============================================
-// 导出函数
-// ============================================
-
 /**
- * 检查域名是否是已知tracker
- * @param {string} domain - 要检查的域名
- * @returns {object|null} - tracker信息或null
+ * Checks whether a domain matches a known tracker entry.
+ * @param {string} domain
+ * @returns {object|null}
  */
 function checkTracker(domain) {
   if (!domain) return null;
-  
-  // 标准化域名
+
   const normalizedDomain = domain.toLowerCase().trim();
-  
-  // 检查每个分类
+
   for (const [category, domains] of Object.entries(TRACKER_DATABASE)) {
     for (const trackerDomain of domains) {
-      // 精确匹配或子域名匹配
-      if (normalizedDomain === trackerDomain || 
+      if (normalizedDomain === trackerDomain ||
           normalizedDomain.endsWith('.' + trackerDomain)) {
         return {
           domain: trackerDomain,
@@ -319,70 +282,62 @@ function checkTracker(domain) {
       }
     }
   }
-  
+
   return null;
 }
 
 /**
- * 检查域名是否是CNAME cloaking
- * @param {string} domain - 要检查的域名
+ * Checks whether a domain matches a known CNAME cloaking target.
+ * @param {string} domain
  * @returns {boolean}
  */
 function isCnameCloaking(domain) {
   if (!domain) return false;
-  
+
   const normalizedDomain = domain.toLowerCase().trim();
-  
+
   for (const cnameDomain of TRACKER_DATABASE.cnameCloaking) {
-    if (normalizedDomain === cnameDomain || 
+    if (normalizedDomain === cnameDomain ||
         normalizedDomain.endsWith('.' + cnameDomain)) {
       return true;
     }
   }
-  
+
   return false;
 }
 
-/**
- * 获取所有tracker域名（用于快速查找）
- * @returns {Set<string>}
- */
+// Build a set for faster domain lookups.
 function getAllTrackerDomains() {
   const allDomains = new Set();
-  
+
   for (const domains of Object.values(TRACKER_DATABASE)) {
     for (const domain of domains) {
       allDomains.add(domain);
     }
   }
-  
+
   return allDomains;
 }
 
-/**
- * 获取tracker统计信息
- * @returns {object}
- */
+// Counts exposed for diagnostics.
 function getTrackerStats() {
   const stats = {
     total: 0,
     byCategory: {}
   };
-  
+
   for (const [category, domains] of Object.entries(TRACKER_DATABASE)) {
     stats.byCategory[category] = domains.length;
     stats.total += domains.length;
   }
-  
+
   return stats;
 }
 
-// 导出供service worker使用
-// 注意：由于service worker使用ES modules，需要用export
-export { 
-  TRACKER_DATABASE, 
+export {
+  TRACKER_DATABASE,
   HIGH_RISK_TRACKERS,
-  checkTracker, 
+  checkTracker,
   isCnameCloaking,
   getAllTrackerDomains,
   getTrackerStats
