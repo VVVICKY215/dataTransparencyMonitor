@@ -43,7 +43,7 @@ accepts a cookie banner.
 ## Academic context
 
 This extension was designed and evaluated as the artefact for a
-BEng Electronic Engineering final-year project at the University of
+BSc Computer Science final-year project at the University of
 Southampton. The project examined whether real-time, context-aware
 privacy information changes how users understand web tracking. The
 evaluation used a remote, mixed-methods user study with 22 participants,
